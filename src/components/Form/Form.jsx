@@ -1,6 +1,11 @@
 import {useForm} from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+
+import { createShortLink } from '../../store/slice/linkSlice';
 
 export function Form() {
+  const dispatch = useDispatch();
+
   const {
     register,
     formState: {errors},
@@ -10,8 +15,11 @@ export function Form() {
     mode: 'onSubmit'
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = ({Url: url}) => {
+    const formData = new FormData();
+    formData.append('url', url);
+
+    dispatch(createShortLink(formData));
   };
 
   return (
