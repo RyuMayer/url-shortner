@@ -1,16 +1,17 @@
 import {useForm} from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { createShortLink } from '../../store/slice/linkSlice';
+import { createShortLink, selectLoading } from '../../store/slice/linkSlice';
 
 export function Form() {
   const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
 
   const {
     register,
     formState: {errors},
     handleSubmit,
-    // reset
+    reset
   } = useForm({
     mode: 'onSubmit'
   });
@@ -20,6 +21,7 @@ export function Form() {
     formData.append('url', url);
 
     dispatch(createShortLink(formData));
+    reset();
   };
 
   return (
@@ -30,6 +32,7 @@ export function Form() {
       <div className="row">
         <div className="col-10 has-validation">
           <input
+            disabled={loading === 'loading'}
             {...register('Url', {
               required: 'Please add a link'
             })}
@@ -44,7 +47,13 @@ export function Form() {
           )}
         </div>
         <div className="col-2">
-          <button type="submit" className="btn btn-primary w-100">Shorten it!</button>
+          <button
+            disabled={loading === 'loading'}
+            type="submit"
+            className="btn btn-primary w-100"
+          >
+            Shorten it!
+          </button>
         </div>
       </div>
     </form>

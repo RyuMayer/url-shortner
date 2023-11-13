@@ -14,8 +14,12 @@ const createShortLink = createAsyncThunk(
       throw new Error('Bad request');
     }
 
-    return await response.json();
+    const result = await response.json();
 
+    return {
+      data: data.get('url'),
+      result
+    };
   }
 );
 
@@ -33,9 +37,13 @@ const linkSlice = createSlice({
         state.loading = 'loading';
       })
       .addCase(createShortLink.fulfilled, (state, action) => {
-        const {result_url} = action.payload;
+        const {data, result: {result_url}} = action.payload;
 
-        state.items.push(result_url);
+        state.items.push({
+          link: data,
+          shortenLink: result_url
+        });
+
         state.loading = 'idle';
 
       })
@@ -45,5 +53,13 @@ const linkSlice = createSlice({
   }
 });
 
-export {createShortLink};
+function selectLoading(state) {
+  return state.links.loading;
+}
+
+function selectLinks(state) {
+  return state.links.items;
+}
+
+export {createShortLink, selectLinks, selectLoading};
 export default linkSlice.reducer;

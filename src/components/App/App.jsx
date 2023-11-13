@@ -1,4 +1,5 @@
 import { Form } from '../Form';
+import { Shortens } from '../Shortens/Shortens';
 
 export function App() {
   return (
@@ -7,6 +8,7 @@ export function App() {
       <div className="alert alert-dark">
         <Form />
       </div>
+      <Shortens />
     </div>
   );
 }
